@@ -7,17 +7,20 @@ export interface IRolesRepository {
   // Métodos básicos CRUD
   create(createRoleDto: CreateRoleDto): Promise<Role>;
   findAll(): Promise<Role[]>;
-  findById(id: number): Promise<Role | null>;
+  findById(id: string): Promise<Role | null>;
   findByName(name: RoleEnum): Promise<Role | null>;
-  update(id: number, updateRoleDto: UpdateRoleDto): Promise<Role>;
-  delete(id: number): Promise<boolean>;
+  update(id: string, updateRoleDto: UpdateRoleDto): Promise<Role>;
+  delete(id: string): Promise<boolean>;
   
   // Métodos específicos del dominio
   findRolesWithUsers(): Promise<Role[]>;
-  countUsersInRole(roleId: number): Promise<number>;
+  countUsersInRole(roleId: string): Promise<number>;
   findDefaultRoles(): Promise<Role[]>;
   
   // Métodos de validación
   existsByName(name: RoleEnum): Promise<boolean>;
-  existsById(id: number): Promise<boolean>;
+  existsById(id: string): Promise<boolean>;
+
+  // Métodos de semillas
+  seedDefaultRoles(): Promise<void>;
 }

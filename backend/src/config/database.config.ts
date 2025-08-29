@@ -1,28 +1,16 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { EnvironmentVariables } from './env.interface';
 
-export const getDatabaseConfig = (configService: ConfigService): TypeOrmModuleOptions => {
-  return {
-    type: 'postgres',
-    host: configService.get<string>('DB_HOST', 'localhost'),
-    port: configService.get<number>('DB_PORT', 5432),
-    username: configService.get<string>('DB_USERNAME', 'postgres'),
-    password: configService.get<string>('DB_PASSWORD'),
-    database: configService.get<string>('DB_NAME', 'ecommerce_db'),
-    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-    synchronize: configService.get<string>('NODE_ENV') !== 'production',
-    logging: configService.get<string>('NODE_ENV') === 'development',
-    ssl: configService.get<string>('NODE_ENV') === 'production' ? {
-      rejectUnauthorized: false
-    } : false,
-    autoLoadEntities: true,
-    retryAttempts: 3,
-    retryDelay: 3000,
-  };
-};
-
-export const databaseConfig = {
-  provide: 'DATABASE_CONFIG',
-  useFactory: getDatabaseConfig,
-  inject: [ConfigService],
-};
+export const databaseConfig = (configService: ConfigService<EnvironmentVariables>): TypeOrmModuleOptions => ({
+  type: 'postgres',
+  host: configService.get('DB_HOST', { infer: true }),
+  port: configService.get('DB_PORT', { infer: true }),
+  username: configService.get('DB_USERNAME', { infer: true }),
+  password: configService.get('DB_PASSWORD', { infer: true }),
+  database: configService.get('DB_NAME', { infer: true }),
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  synchronize: configService.get('NODE_ENV', { infer: true }) !== 'production',
+  // logging: configService.get('NODE_ENV', { infer: true }) === 'development',
+  logging: false
+});

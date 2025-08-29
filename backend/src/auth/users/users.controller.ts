@@ -12,7 +12,12 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
+    try {
+      const user = await this.usersService.create(createUserDto);
+      return CustomResponse.created('Usuario creado exitosamente', user);
+    } catch (error) {
+      return CustomResponse.error(error);
+    }
   }
 
   @Get()
@@ -20,21 +25,41 @@ export class UsersController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ) {
-    return await this.usersService.findAll(page, limit);
+    try {
+      const result = await this.usersService.findAll(page, limit);
+      return CustomResponse.success('Usuarios obtenidos exitosamente', result);
+    } catch (error) {
+      return CustomResponse.error(error);
+    }
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.usersService.findById(+id);
+    try {
+      const user = await this.usersService.findById(id);
+      return CustomResponse.success('Usuario encontrado', user);
+    } catch (error) {
+      return CustomResponse.error(error);
+    }
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.usersService.update(+id, updateUserDto);
+    try {
+      const user = await this.usersService.update(id, updateUserDto);
+      return CustomResponse.success('Usuario actualizado exitosamente', user);
+    } catch (error) {
+      return CustomResponse.error(error);
+    }
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.usersService.delete(+id);
+    try {
+      const result = await this.usersService.delete(id);
+      return CustomResponse.success('Usuario eliminado exitosamente');
+    } catch (error) {
+      return CustomResponse.error(error);
+    }
   }
 }

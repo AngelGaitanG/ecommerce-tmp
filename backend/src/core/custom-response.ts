@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, HttpException } from '@nestjs/common';
 
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -42,12 +42,41 @@ export class CustomResponse {
     return this.createResponse(true, message, HttpStatus.CREATED, data);
   }
 
+  // ✨ Método que lanza HttpException con el código correcto
   static error(
-    message: string = 'Ha ocurrido un error',
-    error?: string,
-    statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR,
-  ): ApiResponse {
-    return this.createResponse(false, message, statusCode, undefined, error);
+    messageOrError: string | Error | HttpException,
+    statusCode?: number,
+  ): never {
+    // Si es una HttpException de NestJS, re-lanzarla
+    if (messageOrError instanceof HttpException) {
+      throw messageOrError;
+    }
+    
+    // Si es un Error genérico
+    if (messageOrError instanceof Error) {
+      throw new HttpException(
+        {
+          success: false,
+          message: messageOrError.message,
+          error: messageOrError.name,
+          timestamp: new Date().toISOString(),
+          statusCode: statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+        },
+        statusCode || HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+    
+    // Si es un string
+    throw new HttpException(
+      {
+        success: false,
+        message: messageOrError,
+        error: 'Error',
+        timestamp: new Date().toISOString(),
+        statusCode: statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+      },
+      statusCode || HttpStatus.INTERNAL_SERVER_ERROR
+    );
   }
 
   static badRequest(

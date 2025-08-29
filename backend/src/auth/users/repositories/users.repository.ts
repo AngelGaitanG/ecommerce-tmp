@@ -5,6 +5,7 @@ import { User } from '../entities/user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { IUsersRepository } from './users.repository.interface';
+import { UpdatePasswordDto } from '../dto/update-password.dto';
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
@@ -28,7 +29,7 @@ export class UsersRepository implements IUsersRepository {
     return { users, total };
   }
 
-  async findById(id: number): Promise<User | null> {
+  async findById(id: string): Promise<User | null> {
     return await this.userRepository.findOne({
       where: { id },
       relations: ['roles'],
@@ -42,12 +43,12 @@ export class UsersRepository implements IUsersRepository {
     });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: string, updateUserDto: UpdateUserDto | UpdatePasswordDto): Promise<User> {
     await this.userRepository.update(id, updateUserDto);
     return await this.findById(id);
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     const result = await this.userRepository.delete(id);
     return result.affected > 0;
   }
@@ -74,12 +75,12 @@ export class UsersRepository implements IUsersRepository {
     });
   }
 
-  async activateUser(id: number): Promise<User> {
+  async activateUser(id: string): Promise<User> {
     await this.userRepository.update(id, { isActive: true });
     return await this.findById(id);
   }
 
-  async deactivateUser(id: number): Promise<User> {
+  async deactivateUser(id: string): Promise<User> {
     await this.userRepository.update(id, { isActive: false });
     return await this.findById(id);
   }
@@ -115,7 +116,7 @@ export class UsersRepository implements IUsersRepository {
     return count > 0;
   }
 
-  async existsById(id: number): Promise<boolean> {
+  async existsById(id: string): Promise<boolean> {
     const count = await this.userRepository.count({ where: { id } });
     return count > 0;
   }

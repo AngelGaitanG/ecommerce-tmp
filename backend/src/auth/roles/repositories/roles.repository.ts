@@ -26,7 +26,7 @@ export class RolesRepository implements IRolesRepository {
     });
   }
 
-  async findById(id: number): Promise<Role | null> {
+  async findById(id: string): Promise<Role | null> {
     return await this.roleRepository.findOne({
       where: { id },
       relations: ['users'],
@@ -40,12 +40,12 @@ export class RolesRepository implements IRolesRepository {
     });
   }
 
-  async update(id: number, updateRoleDto: UpdateRoleDto): Promise<Role> {
+  async update(id: string, updateRoleDto: UpdateRoleDto): Promise<Role> {
     await this.roleRepository.update(id, updateRoleDto);
     return await this.findById(id);
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     const result = await this.roleRepository.delete(id);
     return result.affected > 0;
   }
@@ -56,7 +56,7 @@ export class RolesRepository implements IRolesRepository {
     });
   }
 
-  async countUsersInRole(roleId: number): Promise<number> {
+  async countUsersInRole(roleId: string): Promise<number> {
     const role = await this.roleRepository.findOne({
       where: { id: roleId },
       relations: ['users'],
@@ -78,8 +78,22 @@ export class RolesRepository implements IRolesRepository {
     return count > 0;
   }
 
-  async existsById(id: number): Promise<boolean> {
+  async existsById(id: string): Promise<boolean> {
     const count = await this.roleRepository.count({ where: { id } });
     return count > 0;
+  }
+
+  async seedDefaultRoles(): Promise<void> {
+    const defaultRoles = [
+      { name: RoleEnum.USER },
+      { name: RoleEnum.CUSTOMER },
+      { name: RoleEnum.ADMIN },
+    ];
+
+    for (const role of defaultRoles) {
+      if (!(await this.existsByName(role.name))) {
+        await this.create(role);
+      }
+    }
   }
 }

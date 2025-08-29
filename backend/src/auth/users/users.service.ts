@@ -3,7 +3,7 @@ import { UsersRepository } from './repositories/users.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { CustomResponse } from '../../core/custom-response';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,67 +15,51 @@ export class UsersService {
     // Validar si el email ya existe
     const emailExists = await this.usersRepository.existsByEmail(createUserDto.email);
     if (emailExists) {
-      return CustomResponse.conflict('El email ya está registrado');
+      throw new ConflictException('El email ya está registrado');
     }
 
-    try {
-      const user = await this.usersRepository.create(createUserDto);
-      return CustomResponse.created('Usuario creado exitosamente', user);
-    } catch (error) {
-      return CustomResponse.error('Error al crear usuario', error.message);
-    }
+    const user = await this.usersRepository.create(createUserDto);
+    return user;
   }
 
   async findAll(page: number = 1, limit: number = 10) {
-    try {
-      const result = await this.usersRepository.findAll(page, limit);
-      return CustomResponse.success('Usuarios obtenidos exitosamente', result);
-    } catch (error) {
-      return CustomResponse.error('Error al obtener usuarios', error.message);
-    }
+    const result = await this.usersRepository.findAll(page, limit);
+    return result;
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     const user = await this.usersRepository.findById(id);
     if (!user) {
-      return CustomResponse.notFound('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
     }
-    return CustomResponse.success('Usuario encontrado', user);
+    return user;
   }
 
   async findByEmail(email: string) {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
-      return CustomResponse.notFound('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
     }
-    return CustomResponse.success('Usuario encontrado', user);
+    return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto | UpdatePasswordDto) {
     const userExists = await this.usersRepository.existsById(id);
     if (!userExists) {
-      return CustomResponse.notFound('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
-    try {
-      const user = await this.usersRepository.update(id, updateUserDto);
-      return CustomResponse.success('Usuario actualizado exitosamente', user);
-    } catch (error) {
-      return CustomResponse.error('Error al actualizar usuario', error.message);
-    }
+    const user = await this.usersRepository.update(id, updateUserDto);
+    return user;
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const userExists = await this.usersRepository.existsById(id);
     if (!userExists) {
-      return CustomResponse.notFound('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
-    try {
-      await this.usersRepository.delete(id);
-      return CustomResponse.success('Usuario eliminado exitosamente');
-    } catch (error) {
-      return CustomResponse.error('Error al eliminar usuario', error.message);
-    }
+    await this.usersRepository.delete(id);
+    return { message: 'Usuario eliminado exitosamente' };
   }
 }
