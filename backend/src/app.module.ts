@@ -8,6 +8,7 @@ import { MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { envValidationSchema } from './config/env.validation';
 import { AuthModule } from './auth/auth.module';
+import { CatalogModule } from './catalog/catalog.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { AuthModule } from './auth/auth.module';
       useFactory: databaseConfig,
       inject: [ConfigService],
     }),
-    AuthModule
+    AuthModule,
+    CatalogModule
   ],
   controllers: [AppController],
   providers: [AppService],
