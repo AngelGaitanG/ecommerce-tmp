@@ -1,0 +1,200 @@
+<div class="home-container">
+  <!-- Hero Carousel Section -->
+  <section class="hero-carousel">
+    <div class="carousel-container">
+      <div class="carousel-slides">
+        <!-- Slide 1 -->
+        <div class="carousel-slide active">
+          <div class="slide-content">
+            <div class="slide-text">
+              <h1 class="slide-title">Nueva Colección Primavera</h1>
+              <p class="slide-subtitle">
+                Descubre las últimas tendencias en moda con nuestra colección exclusiva.
+                Calidad premium y diseños únicos.
+              </p>
+              <div class="slide-actions">
+                <a href="#products" class="btn btn-primary btn-large">Explorar Ahora</a>
+                <span class="slide-price">Desde $29.99</span>
+              </div>
+            </div>
+            <div class="slide-image">
+              <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=600&fit=crop" 
+                   alt="Nueva Colección Primavera">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Slide 2 -->
+        <div class="carousel-slide">
+          <div class="slide-content">
+            <div class="slide-text">
+              <h1 class="slide-title">Ofertas Especiales</h1>
+              <p class="slide-subtitle">
+                Hasta 50% de descuento en productos seleccionados.
+                Aprovecha estas ofertas por tiempo limitado.
+              </p>
+              <div class="slide-actions">
+                <a href="#products" class="btn btn-primary btn-large">Ver Ofertas</a>
+                <span class="slide-price">50% OFF</span>
+              </div>
+            </div>
+            <div class="slide-image">
+              <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=600&fit=crop" 
+                   alt="Ofertas Especiales">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="carousel-slide">
+          <div class="slide-content">
+            <div class="slide-text">
+              <h1 class="slide-title">Accesorios Premium</h1>
+              <p class="slide-subtitle">
+                Complementa tu estilo con nuestra línea de accesorios exclusivos.
+                Calidad y elegancia en cada detalle.
+              </p>
+              <div class="slide-actions">
+                <a href="#categories" class="btn btn-primary btn-large">Ver Accesorios</a>
+                <span class="slide-price">Nuevo</span>
+              </div>
+            </div>
+            <div class="slide-image">
+              <img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=600&h=600&fit=crop" 
+                   alt="Accesorios Premium">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Navigation Arrows -->
+      <button class="carousel-nav prev" (click)="previousSlide()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="carousel-nav next" (click)="nextSlide()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      
+      <!-- Dots Indicator -->
+      <div class="carousel-dots">
+        <button class="dot active" (click)="goToSlide(0)"></button>
+        <button class="dot" (click)="goToSlide(1)"></button>
+        <button class="dot" (click)="goToSlide(2)"></button>
+      </div>
+    </div>
+    
+
+  </section>
+
+<!-- Categories Section -->
+<section id="categories" class="categories-section">
+  <div class="categories-grid">
+    <div class="category-card" 
+         *ngFor="let category of categories" 
+         (click)="navigateToCategory(category.name)">
+      <div class="category-image">
+        <img [src]="category.image" [alt]="category.name">
+        <div class="category-overlay">
+          <span class="category-count">{{category.count}} productos</span>
+        </div>
+      </div>
+      <h3 class="category-name">{{category.name}}</h3>
+    </div>
+  </div>
+</section>
+
+<!-- Offers Section -->
+<section class="offers-section">
+  <div class="offers-header">
+    <h2 class="offers-title">Ofertas</h2>
+  </div>
+  
+  <div class="offers-grid">
+    <div class="offer-card">
+      <div class="offer-image">
+        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop&crop=center" alt="Oferta Electrónicos">
+        <div class="offer-overlay">
+          <span class="offer-discount">-30%</span>
+        </div>
+      </div>
+      <div class="offer-name">Electrónicos</div>
+    </div>
+    
+    <div class="offer-card">
+      <div class="offer-image">
+        <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=300&fit=crop&crop=center" alt="Oferta Moda">
+        <div class="offer-overlay">
+          <span class="offer-discount">-25%</span>
+        </div>
+      </div>
+      <div class="offer-name">Moda</div>
+    </div>
+    
+    <div class="offer-card">
+      <div class="offer-image">
+        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop&crop=center" alt="Oferta Hogar">
+        <div class="offer-overlay">
+          <span class="offer-discount">-20%</span>
+        </div>
+      </div>
+      <div class="offer-name">Hogar</div>
+    </div>
+    
+    <div class="offer-card">
+      <div class="offer-image">
+        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop&crop=center" alt="Oferta Deportes">
+        <div class="offer-overlay">
+          <span class="offer-discount">-35%</span>
+        </div>
+      </div>
+      <div class="offer-name">Deportes</div>
+    </div>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section id="products" class="products-section">
+  <div class="section-header">
+    <h2 class="section-title">Recomendaciones</h2>
+    <p class="section-subtitle">Lo mejor de nuestra colección</p>
+  </div>
+  
+  <div class="products-grid">
+    <app-product-card 
+      *ngFor="let product of featuredProducts" 
+      [product]="product"
+      (addToCart)="addToCart($event)"
+      (addToFavorites)="addToFavorites($event)"
+      (viewDetails)="viewProductDetails($event)">
+    </app-product-card>
+  </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+  <div class="newsletter-content">
+    <h2 class="newsletter-title">¡No te pierdas nada!</h2>
+    <p class="newsletter-subtitle">
+      Suscríbete a nuestro newsletter y recibe las últimas novedades, 
+      ofertas exclusivas y tendencias de moda directamente en tu email.
+    </p>
+    
+    <form class="input-group">
+      <input 
+        type="email" 
+        placeholder="Tu email aquí..." 
+        class="newsletter-input"
+        required>
+      <button type="submit" class="btn btn-primary">Suscribirse</button>
+    </form>
+    
+    <p class="newsletter-disclaimer">
+      Al suscribirte, aceptas recibir emails promocionales. Puedes darte de baja en cualquier momento.
+    </p>
+  </div>
+</section>
+</div>

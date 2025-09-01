@@ -1,0 +1,205 @@
+<div class="cart-container">
+  <div class="cart-header">
+    <h1 class="cart-title">
+      <svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5-6m0 0h15M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"></path>
+      </svg>
+      Carrito de Compras
+    </h1>
+    <p class="cart-subtitle">Revisa y gestiona tus productos seleccionados</p>
+  </div>
+
+  <div class="cart-content" *ngIf="cartItems$ | async as cartItems">
+    <!-- Carrito vacío -->
+    <div *ngIf="cartItems.length === 0" class="empty-cart">
+      <div class="empty-cart-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+        </svg>
+      </div>
+      <h2 class="empty-cart-title">Tu carrito está vacío</h2>
+      <p class="empty-cart-message">¡Agrega algunos productos increíbles para comenzar!</p>
+      <button class="continue-shopping-btn" (click)="continueShopping()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+        </svg>
+        Continuar Comprando
+      </button>
+    </div>
+
+    <!-- Carrito con productos -->
+    <div *ngIf="cartItems.length > 0" class="cart-with-items">
+      <div class="cart-items-section">
+        <div class="section-header">
+          <h2 class="section-title">Productos en tu carrito</h2>
+          <button class="clear-cart-btn" (click)="clearCart()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            Vaciar Carrito
+          </button>
+        </div>
+
+        <div class="cart-items-list">
+          <div *ngFor="let item of cartItems" class="cart-item">
+            <div class="item-image">
+              <img [src]="item.image" [alt]="item.name" />
+            </div>
+            
+            <div class="item-details">
+              <h3 class="item-name">{{ item.name }}</h3>
+              <p class="item-category">{{ item.category }}</p>
+              <p class="item-price">${{ item.price | number:'1.2-2' }}</p>
+            </div>
+
+            <div class="item-quantity">
+              <button 
+                class="quantity-btn decrease" 
+                (click)="decreaseQuantity(item.id, item.quantity)"
+                [disabled]="item.quantity <= 1">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                </svg>
+              </button>
+              
+              <span class="quantity-display">{{ item.quantity }}</span>
+              
+              <button 
+                class="quantity-btn increase" 
+                (click)="increaseQuantity(item.id, item.quantity)">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="item-total">
+              <p class="total-price">${{ (item.price * item.quantity) | number:'1.2-2' }}</p>
+            </div>
+
+            <button class="remove-item-btn" (click)="removeItem(item.id)">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen del carrito -->
+      <div class="cart-summary">
+        <div class="summary-card">
+          <h3 class="summary-title">Resumen del Pedido</h3>
+          
+          <div class="summary-details">
+            <div class="summary-row">
+              <span class="summary-label">Productos ({{ (cartCount$ | async) || 0 }})</span>
+              <span class="summary-value">${{ (cartTotal$ | async) || 0 | number:'1.2-2' }}</span>
+            </div>
+            
+            <div class="summary-row">
+              <span class="summary-label">Envío</span>
+              <span class="summary-value free">Gratis</span>
+            </div>
+            
+            <div class="summary-row">
+              <span class="summary-label">Impuestos</span>
+              <span class="summary-value">${{ ((cartTotal$ | async) || 0) * 0.16 | number:'1.2-2' }}</span>
+            </div>
+            
+            <!-- Cupón de descuento aplicado -->
+            <div *ngIf="appliedCoupon" class="summary-row discount">
+              <span class="summary-label">
+                Descuento ({{ appliedCoupon.code }})
+                <button class="remove-coupon-btn" (click)="removeCoupon()" title="Quitar cupón">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </span>
+              <span class="summary-value discount">-${{ calculateDiscount((cartTotal$ | async) || 0) | number:'1.2-2' }}</span>
+            </div>
+            
+            <div class="summary-divider"></div>
+            
+            <div class="summary-row total">
+              <span class="summary-label">Total</span>
+              <span class="summary-value">${{ calculateFinalTotal((cartTotal$ | async) || 0) | number:'1.2-2' }}</span>
+            </div>
+          </div>
+
+          <!-- Sección de cupón de descuento -->
+          <div class="coupon-section">
+            <h4 class="coupon-title">¿Tienes un cupón de descuento?</h4>
+            
+            <div class="coupon-input-group">
+              <input 
+                type="text" 
+                [(ngModel)]="couponCode" 
+                placeholder="Ingresa tu código de cupón"
+                class="coupon-input"
+                [class.error]="couponError"
+                (keyup.enter)="applyCoupon()">
+              <button 
+                class="apply-coupon-btn" 
+                (click)="applyCoupon()"
+                [disabled]="!couponCode.trim()">
+                Aplicar
+              </button>
+            </div>
+            
+            <div *ngIf="couponError" class="coupon-error">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              {{ couponError }}
+            </div>
+            
+            <div *ngIf="appliedCoupon" class="coupon-success">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              ¡Cupón aplicado! {{ appliedCoupon.description }}
+            </div>
+            
+            <!-- Cupones disponibles (opcional, para mostrar ejemplos) -->
+            <div class="available-coupons">
+              <p class="available-coupons-title">Cupones disponibles:</p>
+              <div class="coupon-examples">
+                <span class="coupon-example" *ngFor="let coupon of availableCoupons" 
+                      (click)="couponCode = coupon.code">
+                  {{ coupon.code }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-actions">
+            <button class="checkout-btn" (click)="proceedToCheckout()">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+              </svg>
+              Proceder al Pago
+            </button>
+            
+            <button class="continue-shopping-btn secondary" (click)="continueShopping()">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+              </svg>
+              Continuar Comprando
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

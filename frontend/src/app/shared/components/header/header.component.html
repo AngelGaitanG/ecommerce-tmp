@@ -1,0 +1,118 @@
+<header class="header" [class]="'header-' + headerTheme + (isScrolled ? ' scrolled' : '')">
+  <div class="header-container">
+    <!-- Logo -->
+    <div class="logo">
+      <a routerLink="/" class="logo-link">
+        <span class="logo-text">e-commerce</span>
+      </a>
+    </div>
+
+    <!-- Navigation Desktop -->
+    <nav class="nav-desktop">
+      <ul class="nav-list">
+        <li><a routerLink="/products" routerLinkActive="active">Productos</a></li>
+        <li><a routerLink="/categories" routerLinkActive="active">Categorías</a></li>
+      </ul>
+    </nav>
+
+    <!-- Actions -->
+    <div class="header-actions">
+      <!-- Search -->
+      <div class="search-container">
+        <input type="text" placeholder="Buscar productos..." class="search-input">
+        <button class="search-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Cart -->
+      <div class="cart">
+        <button class="cart-btn" routerLink="/cart">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 6H3m4 7v6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-6"></path>
+          </svg>
+          <span class="cart-count">{{ cartCount$ | async }}</span>
+        </button>
+      </div>
+
+      <!-- User Menu -->
+      <div class="user-menu" *ngIf="isAuthenticated; else authButtons">
+        <button class="user-btn" (click)="toggleUserMenu()">
+          <div class="user-avatar">
+            {{ currentUser?.firstName?.charAt(0) || 'U' }}
+          </div>
+          <span class="user-name">{{ currentUser?.firstName || 'Usuario' }}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6,9 12,15 18,9"></polyline>
+          </svg>
+        </button>
+        
+        <div class="user-dropdown" [class.open]="isUserMenuOpen">
+          <a routerLink="/profile" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Mi Perfil
+          </a>
+          <a routerLink="/orders" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+            Mis Pedidos
+          </a>
+          <button class="dropdown-item logout-btn" (click)="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16,17 21,12 16,7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+
+      <!-- Auth Buttons -->
+      <ng-template #authButtons>
+        <div class="auth-buttons">
+          <a routerLink="/auth/login" class="btn btn-outline">Iniciar Sesión</a>
+          <a routerLink="/auth/register" class="btn btn-primary">Registrarse</a>
+        </div>
+      </ng-template>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" (click)="toggleMenu()">
+        <span class="hamburger-line" [class.active]="isMenuOpen"></span>
+        <span class="hamburger-line" [class.active]="isMenuOpen"></span>
+        <span class="hamburger-line" [class.active]="isMenuOpen"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <nav class="nav-mobile" [class.open]="isMenuOpen">
+    <ul class="nav-mobile-list">
+      <li><a routerLink="/products" (click)="toggleMenu()" routerLinkActive="active">Productos</a></li>
+      <li><a routerLink="/categories" (click)="toggleMenu()" routerLinkActive="active">Categorías</a></li>
+      
+      <div class="mobile-auth" *ngIf="!isAuthenticated">
+        <a routerLink="/auth/login" (click)="toggleMenu()" class="btn btn-outline">Iniciar Sesión</a>
+        <a routerLink="/auth/register" (click)="toggleMenu()" class="btn btn-primary">Registrarse</a>
+      </div>
+      
+      <div class="mobile-user" *ngIf="isAuthenticated">
+        <div class="mobile-user-info">
+          <div class="user-avatar">{{ currentUser?.firstName?.charAt(0) || 'U' }}</div>
+          <span>{{ currentUser?.firstName || 'Usuario' }}</span>
+        </div>
+        <a routerLink="/profile" (click)="toggleMenu()" class="mobile-menu-item">Mi Perfil</a>
+        <a routerLink="/orders" (click)="toggleMenu()" class="mobile-menu-item">Mis Pedidos</a>
+        <button (click)="logout(); toggleMenu()" class="mobile-menu-item logout-btn">Cerrar Sesión</button>
+      </div>
+    </ul>
+  </nav>
+</header>

@@ -1,0 +1,86 @@
+<div class="product-card" [class.list-view]="viewMode === 'list'">
+  <!-- Imagen del producto -->
+  <div class="product-image">
+    <img [src]="product.image" [alt]="product.name" loading="lazy">
+    
+    <!-- Badges -->
+    <div class="product-badges">
+      <span *ngIf="product.isNew" class="badge badge-new">Nuevo</span>
+      <span *ngIf="product.discount" class="badge badge-discount">-{{ product.discount }}%</span>
+      <span *ngIf="product.isFeatured" class="badge badge-featured">Destacado</span>
+      <span *ngIf="product.isOnSale" class="badge sale-badge">-{{ product.discount }}%</span>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="product-actions">
+      <button class="action-btn" title="Ver detalles" (click)="onViewDetails()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </button>
+      <button class="action-btn favorite-btn" title="Agregar a favoritos" (click)="onAddToFavorites()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Información del producto -->
+  <div class="product-info">
+    <span class="product-category" *ngIf="product.category">{{ product.category }}</span>
+    <h3 class="product-name">{{ product.name }}</h3>
+    <p class="product-description" *ngIf="showDescription && product.description">{{ product.description }}</p>
+    
+    <!-- Rating -->
+    <div class="product-rating">
+      <div class="stars">
+        <span *ngFor="let star of getFilledStars(product.rating)" class="star filled">★</span>
+        <span *ngFor="let star of getEmptyStars(product.rating)" class="star">★</span>
+      </div>
+      <span class="rating-text">({{ product.reviews }})</span>
+      <span class="reviews-count" *ngIf="!showDescription">({{ product.reviews }})</span>
+    </div>
+
+    <!-- Precio -->
+    <div class="product-price">
+      <span class="current-price">${{ product.price }}</span>
+      <span *ngIf="product.originalPrice" class="original-price">${{ product.originalPrice }}</span>
+    </div>
+
+    <!-- Variantes -->
+    <div class="product-variants" *ngIf="showVariants">
+      <div class="colors" *ngIf="product.colors">
+        <span class="variant-label">Colores:</span>
+        <span class="variant-options">{{ product.colors.join(', ') }}</span>
+      </div>
+      <div class="sizes" *ngIf="product.sizes">
+        <span class="variant-label">Tallas:</span>
+        <span class="variant-options">{{ product.sizes.join(', ') }}</span>
+      </div>
+    </div>
+
+    <!-- Stock -->
+    <div class="product-stock">
+      <span class="stock-status" [class.in-stock]="product.inStock" [class.out-of-stock]="!product.inStock">
+        {{ product.inStock ? 'En stock' : 'Agotado' }}
+      </span>
+    </div>
+
+    <!-- Botón de agregar al carrito -->
+    <div class="product-cart">
+      <button 
+        class="add-to-cart-btn cart-btn"
+        [disabled]="!product.inStock"
+        (click)="onAddToCart()"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 6H3m4 7v6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-6"></path>
+        </svg>
+        <span *ngIf="cartQuantity === 0">Agregar al carrito</span>
+        <span *ngIf="cartQuantity > 0">En carrito ({{ cartQuantity }})</span>
+      </button>
+    </div>
+  </div>
+</div>

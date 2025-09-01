@@ -1,0 +1,135 @@
+<div class="categories-page">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="container">
+      <div class="header-content">
+        <h1 class="page-title">Categorías</h1>
+        <p class="page-subtitle">
+          Explora nuestras {{ categories.length }} categorías con más de {{ getTotalProducts() }} productos
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Categories Section -->
+  <div class="featured-section" *ngIf="featuredCategories.length > 0">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Categorías Destacadas</h2>
+        <p class="section-subtitle">Las categorías más populares de nuestra tienda</p>
+      </div>
+      
+      <div class="featured-grid">
+        <div 
+          class="featured-card" 
+          *ngFor="let category of featuredCategories"
+          (click)="navigateToCategory(category.id)"
+          [style.border-color]="category.color"
+        >
+          <div class="card-image">
+            <img [src]="category.image" [alt]="category.name" loading="lazy">
+            <div class="card-overlay" [style.background]="'linear-gradient(135deg, ' + category.color + '80, ' + category.color + 'CC)'">
+              <div class="card-content">
+                <h3 class="card-title">{{ category.name }}</h3>
+                <p class="card-description">{{ category.description }}</p>
+                <div class="card-stats">
+                  <span class="product-count">{{ category.productCount }} productos</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Categories Section -->
+  <div class="all-categories-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Todas las Categorías</h2>
+        <p class="section-subtitle">Encuentra exactamente lo que buscas</p>
+      </div>
+      
+      <div class="categories-grid">
+        <div 
+          class="category-card" 
+          *ngFor="let category of allCategories"
+          (click)="navigateToCategory(category.id)"
+        >
+          <div class="card-header" [style.background-color]="category.color">
+            <div class="category-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7M3 7L12 2L21 7M3 7L12 13L21 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span class="featured-badge" *ngIf="category.featured">Destacada</span>
+          </div>
+          
+          <div class="card-body">
+            <h3 class="category-name">{{ category.name }}</h3>
+            <p class="category-description">{{ category.description }}</p>
+            
+            <div class="category-stats">
+              <div class="stat-item">
+                <span class="stat-number">{{ category.productCount }}</span>
+                <span class="stat-label">productos</span>
+              </div>
+            </div>
+            
+            <button class="explore-btn" [style.background-color]="category.color">
+              <span>Explorar</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Section -->
+  <div class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7M3 7L12 2L21 7M3 7L12 13L21 7" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ categories.length }}</h3>
+            <p class="stat-label">Categorías Disponibles</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 7L12 3L4 7L12 11L20 7Z" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 7V17L12 21L20 17V7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ getTotalProducts() }}</h3>
+            <p class="stat-label">Productos Totales</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ featuredCategories.length }}</h3>
+            <p class="stat-label">Categorías Destacadas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

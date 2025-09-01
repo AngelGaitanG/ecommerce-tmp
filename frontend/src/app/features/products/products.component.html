@@ -1,0 +1,225 @@
+<div class="products-page">
+  <!-- Header de la página -->
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">Productos</h1>
+      <p class="page-subtitle">Descubre nuestra colección completa</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="products-layout">
+      <!-- Sidebar con filtros -->
+      <aside class="filters-sidebar">
+        <div class="filters-header">
+          <h3>Filtros</h3>
+          <button class="clear-filters-btn" (click)="clearFilters()">Limpiar</button>
+        </div>
+
+        <!-- Búsqueda -->
+        <div class="filter-section">
+          <label class="filter-label">Buscar</label>
+          <div class="search-box">
+            <input 
+              type="text" 
+              [(ngModel)]="searchTerm" 
+              (input)="onSearchChange()" 
+              placeholder="Buscar productos..."
+              class="search-input"
+            >
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Categorías -->
+        <div class="filter-section">
+          <label class="filter-label">Categorías</label>
+          <div class="category-list">
+            <div 
+              *ngFor="let category of categories" 
+              class="category-item"
+              [class.active]="selectedCategory === category.id"
+              (click)="onCategoryChange(category.id)"
+            >
+              <span class="category-name">{{ category.name }}</span>
+              <span class="category-count">({{ category.count }})</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rango de precios -->
+        <div class="filter-section">
+          <label class="filter-label">Precio</label>
+          <div class="price-range">
+            <div class="price-inputs">
+              <input 
+                type="number" 
+                [(ngModel)]="priceRange.min" 
+                (change)="onPriceRangeChange()"
+                placeholder="Mín"
+                class="price-input"
+              >
+              <span class="price-separator">-</span>
+              <input 
+                type="number" 
+                [(ngModel)]="priceRange.max" 
+                (change)="onPriceRangeChange()"
+                placeholder="Máx"
+                class="price-input"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="filter-section">
+          <label class="filter-label">Calificación mínima</label>
+          <div class="rating-filter">
+            <div 
+              *ngFor="let rating of [5,4,3,2,1]" 
+              class="rating-option"
+              [class.active]="selectedRating === rating"
+              (click)="onRatingChange(rating)"
+            >
+              <div class="stars">
+                <span *ngFor="let star of getFilledStars(rating)" class="star filled">★</span>
+                <span *ngFor="let star of getEmptyStars(rating)" class="star">★</span>
+              </div>
+              <span class="rating-text">{{ rating }} estrellas y más</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Contenido principal -->
+      <main class="products-main">
+        <!-- Barra de herramientas -->
+        <div class="products-toolbar">
+          <div class="toolbar-left">
+            <span class="results-count">
+              {{ filteredProducts.length }} productos encontrados
+            </span>
+          </div>
+          
+          <div class="toolbar-right">
+            <!-- Ordenamiento -->
+            <select 
+              [(ngModel)]="sortBy" 
+              (change)="onSortChange()" 
+              class="sort-select"
+            >
+              <option value="name">Ordenar por nombre</option>
+              <option value="price-low">Precio: menor a mayor</option>
+              <option value="price-high">Precio: mayor a menor</option>
+              <option value="rating">Mejor calificados</option>
+              <option value="newest">Más nuevos</option>
+            </select>
+
+            <!-- Vista -->
+            <div class="view-toggle">
+              <button 
+                class="view-btn"
+                [class.active]="viewMode === 'grid'"
+                (click)="viewMode = 'grid'"
+                title="Vista en cuadrícula"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </button>
+              <button 
+                class="view-btn"
+                [class.active]="viewMode === 'list'"
+                (click)="viewMode = 'list'"
+                title="Vista en lista"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid de productos -->
+        <div class="products-grid" [class.list-view]="viewMode === 'list'">
+          <app-product-card
+            *ngFor="let product of getPaginatedProducts()"
+            [product]="product"
+            [viewMode]="viewMode"
+            [showDescription]="viewMode === 'list'"
+            [showVariants]="viewMode === 'list'"
+            [cartQuantity]="getCartQuantity(product.id)"
+            (addToCart)="addToCart($event)"
+            (addToFavorites)="addToFavorites($event)"
+            (viewDetails)="viewProductDetails($event)"
+          ></app-product-card>
+        </div>
+
+        <!-- Mensaje cuando no hay productos -->
+        <div *ngIf="filteredProducts.length === 0" class="no-products">
+          <div class="no-products-content">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M16 16s-1.5-2-4-2-4 2-4 2"></path>
+              <line x1="9" y1="9" x2="9.01" y2="9"></line>
+              <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            </svg>
+            <h3>No se encontraron productos</h3>
+            <p>Intenta ajustar los filtros o buscar con otros términos</p>
+            <button class="clear-filters-btn" (click)="clearFilters()">Limpiar filtros</button>
+          </div>
+        </div>
+
+        <!-- Paginación -->
+        <div *ngIf="getTotalPages() > 1" class="pagination">
+          <button 
+            class="pagination-btn"
+            [disabled]="currentPage === 1"
+            (click)="changePage(currentPage - 1)"
+          >
+            Anterior
+          </button>
+          
+          <div class="pagination-numbers">
+            <button 
+              *ngFor="let page of [].constructor(getTotalPages()); let i = index"
+              class="pagination-number"
+              [class.active]="currentPage === i + 1"
+              (click)="changePage(i + 1)"
+            >
+              {{ i + 1 }}
+            </button>
+          </div>
+          
+          <button 
+            class="pagination-btn"
+            [disabled]="currentPage === getTotalPages()"
+            (click)="changePage(currentPage + 1)"
+          >
+            Siguiente
+          </button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Carrito flotante -->
+  <div *ngIf="(cartCount$ | async)! > 0" class="floating-cart">
+    <div class="cart-summary">
+      <span class="cart-items-count">{{ cartCount$ | async }} artículos en el carrito</span>
+      <button class="view-cart-btn" routerLink="/cart">Ver carrito</button>
+    </div>
+  </div>
+</div>
