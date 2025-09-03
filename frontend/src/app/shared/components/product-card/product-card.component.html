@@ -1,6 +1,6 @@
 <div class="product-card" [class.list-view]="viewMode === 'list'">
   <!-- Imagen del producto -->
-  <div class="product-image">
+  <div class="product-image" (click)="onViewDetails()" style="cursor: pointer;">
     <img [src]="product.image" [alt]="product.name" loading="lazy">
     
     <!-- Badges -->
@@ -30,7 +30,7 @@
   <!-- Información del producto -->
   <div class="product-info">
     <span class="product-category" *ngIf="product.category">{{ product.category }}</span>
-    <h3 class="product-name">{{ product.name }}</h3>
+    <h3 class="product-name" (click)="onViewDetails()" style="cursor: pointer;">{{ product.name }}</h3>
     <p class="product-description" *ngIf="showDescription && product.description">{{ product.description }}</p>
     
     <!-- Rating -->

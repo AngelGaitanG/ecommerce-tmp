@@ -1,0 +1,160 @@
+<div class="product-detail-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Cargando producto...</p>
+  </div>
+
+  <!-- Product Content -->
+  <div *ngIf="!loading && product" class="product-content">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <button (click)="goBack()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver a productos
+      </button>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-item">{{ product.category }}</span>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-current">{{ product.name }}</span>
+    </nav>
+
+    <!-- Main Product Section -->
+    <div class="product-main">
+      <!-- Image Gallery -->
+      <div class="image-gallery">
+        <div class="main-image">
+          <img [src]="product.images[selectedImageIndex]" [alt]="product.name" />
+          <div *ngIf="product.discount" class="discount-badge">
+            -{{ product.discount }}%
+          </div>
+        </div>
+        <div class="thumbnail-list">
+          <button
+            *ngFor="let image of product.images; let i = index"
+            class="thumbnail"
+            [class.active]="i === selectedImageIndex"
+            (click)="selectImage(i)"
+          >
+            <img [src]="image" [alt]="product.name + ' imagen ' + (i + 1)" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info">
+        <div class="product-header">
+          <h1 class="product-title">{{ product.name }}</h1>
+          <p class="product-brand">{{ product.brand }}</p>
+          
+          <!-- Rating -->
+          <div class="rating-section">
+            <div class="stars">
+              <i *ngFor="let star of [1,2,3,4,5]" 
+                 class="fas fa-star"
+                 [class.filled]="star <= product.rating">
+              </i>
+            </div>
+            <span class="rating-text">{{ product.rating }} ({{ product.reviews }} reseñas)</span>
+          </div>
+        </div>
+
+        <!-- Price Section -->
+        <div class="price-section">
+          <div class="current-price">${{ product.price }}</div>
+          <div *ngIf="product.originalPrice" class="original-price">
+            ${{ product.originalPrice }}
+          </div>
+          <div *ngIf="product.discount" class="savings">
+            Ahorras ${{ (product.originalPrice! - product.price).toFixed(2) }}
+          </div>
+        </div>
+
+        <!-- Stock Status -->
+        <div class="stock-status" [class.in-stock]="product.inStock" [class.out-of-stock]="!product.inStock">
+          <i class="fas" [class.fa-check-circle]="product.inStock" [class.fa-times-circle]="!product.inStock"></i>
+          {{ product.inStock ? 'En stock' : 'Agotado' }}
+        </div>
+
+        <!-- Description -->
+        <div class="description">
+          <h3>Descripción</h3>
+          <p>{{ product.description }}</p>
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+          <h3>Características principales</h3>
+          <ul>
+            <li *ngFor="let feature of product.features">
+              <i class="fas fa-check"></i>
+              {{ feature }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Purchase Section -->
+        <div class="purchase-section">
+          <div class="quantity-selector">
+            <label>Cantidad:</label>
+            <div class="quantity-controls">
+              <button (click)="changeQuantity(-1)" [disabled]="quantity <= 1">
+                <i class="fas fa-minus"></i>
+              </button>
+              <span class="quantity">{{ quantity }}</span>
+              <button (click)="changeQuantity(1)" [disabled]="quantity >= 10">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button 
+              class="add-to-cart-btn" 
+              (click)="addToCart()" 
+              [disabled]="!product.inStock"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              Agregar al carrito
+            </button>
+            <button class="wishlist-btn" (click)="addToWishlist()">
+              <i class="far fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Specifications -->
+    <div class="specifications-section">
+      <h2>Especificaciones técnicas</h2>
+      <div class="specs-grid">
+        <div *ngFor="let spec of product.specifications | keyvalue" class="spec-item">
+          <span class="spec-label">{{ spec.key }}:</span>
+          <span class="spec-value">{{ spec.value }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="related-products-section">
+      <h2>Productos relacionados</h2>
+      <div class="related-products-grid">
+        <app-product-card
+          *ngFor="let relatedProduct of relatedProducts"
+          [product]="relatedProduct"
+        ></app-product-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loading && !product" class="error-container">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h2>Producto no encontrado</h2>
+    <p>El producto que buscas no existe o ha sido eliminado.</p>
+    <button (click)="goBack()" class="back-btn">
+      Volver a productos
+    </button>
+  </div>
+</div>

@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 export interface Product {
   id: number;
@@ -29,6 +30,8 @@ export interface Product {
   styleUrls: ['./product-card.component.scss']
 })
 export class ProductCardComponent {
+  private router = inject(Router);
+  
   @Input() product!: Product;
   @Input() viewMode: 'grid' | 'list' = 'grid';
   @Input() showDescription: boolean = false;
@@ -62,6 +65,7 @@ export class ProductCardComponent {
   }
 
   onViewDetails(): void {
+    this.router.navigate(['/product', this.product.id]);
     this.viewDetails.emit(this.product);
   }
 }
