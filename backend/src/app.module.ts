@@ -9,6 +9,8 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { envValidationSchema } from './config/env.validation';
 import { AuthModule } from './auth/auth.module';
 import { CatalogModule } from './catalog/catalog.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -26,7 +28,9 @@ import { CatalogModule } from './catalog/catalog.module';
       inject: [ConfigService],
     }),
     AuthModule,
-    CatalogModule
+    CatalogModule,
+    InventoryModule,
+    OrdersModule
   ],
   controllers: [AppController],
   providers: [AppService],

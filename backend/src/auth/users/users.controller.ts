@@ -4,6 +4,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { CustomResponse } from '../../core/custom-response';
+import { Auth } from '../decorators/auth.decorator';
+import { GetUser } from '../decorators/get-user.decorator';
+import { User } from './entities/user.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor) // Para usar los DTOs de respuesta
@@ -28,6 +32,19 @@ export class UsersController {
     try {
       const result = await this.usersService.findAll(page, limit);
       return CustomResponse.success('Usuarios obtenidos exitosamente', result);
+    } catch (error) {
+      return CustomResponse.error(error);
+    }
+  }
+  
+  @Auth()
+  @Get('me')
+  async getMyProfile(@GetUser() user: User) {
+    try {
+      // Obtener información completa del usuario desde la base de datos
+      const fullUser = await this.usersService.findById(user.id);
+      const userResponse = plainToInstance(UserResponseDto, fullUser);
+      return CustomResponse.success('Información del usuario obtenida exitosamente', userResponse);
     } catch (error) {
       return CustomResponse.error(error);
     }
@@ -62,4 +79,8 @@ export class UsersController {
       return CustomResponse.error(error);
     }
   }
+
+  /**
+   * Obtener información del usuario autenticado usando el token JWT
+   */
 }

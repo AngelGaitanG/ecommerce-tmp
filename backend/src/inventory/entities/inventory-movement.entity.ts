@@ -113,6 +113,9 @@ export class InventoryMovement {
   @Column({ length: 100, nullable: true })
   performedBy?: string; // Usuario que realizó el movimiento
 
+  @Column({ })
+  status: string;
+
   // Campos de auditoría
   @CreateDateColumn()
   createdAt: Date;

@@ -19,6 +19,9 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { CustomResponse } from '../../core/custom-response';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { Public } from '../../auth/decorators/public.decorator';
+import { Role } from '../../auth/roles/enums/role.enum';
 
 @Controller('products')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,6 +31,7 @@ export class ProductsController {
   /**
    * Crear nuevo producto
    */
+  @Auth(Role.ADMIN)
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
     try {
@@ -41,6 +45,7 @@ export class ProductsController {
   /**
    * Obtener todos los productos con filtros y paginación
    */
+  @Public()
   @Get()
   async findAll(@Query() queryDto: ProductQueryDto) {
     try {
@@ -54,6 +59,7 @@ export class ProductsController {
   /**
    * Buscar productos por término de búsqueda
    */
+  @Public()
   @Get('search')
   async search(
     @Query('q') query: string,
@@ -70,6 +76,7 @@ export class ProductsController {
   /**
    * Obtener productos destacados
    */
+  @Public()
   @Get('featured')
   async findFeatured(@Query() options: ProductQueryDto) {
     try {
@@ -83,6 +90,7 @@ export class ProductsController {
   /**
    * Obtener productos en stock
    */
+  @Public()
   @Get('in-stock')
   async findInStock(@Query() options: ProductQueryDto) {
     try {
@@ -96,6 +104,7 @@ export class ProductsController {
   /**
    * Obtener productos sin stock
    */
+  @Public()
   @Get('out-of-stock')
   async findOutOfStock(@Query() options: ProductQueryDto) {
     try {
@@ -109,6 +118,7 @@ export class ProductsController {
   /**
    * Obtener productos con stock bajo
    */
+  @Public()
   @Get('low-stock')
   async findLowStock(@Query() options: ProductQueryDto) {
     try {
@@ -122,6 +132,7 @@ export class ProductsController {
   /**
    * Obtener productos en oferta
    */
+  @Public()
   @Get('on-sale')
   async findOnSale(@Query() options: ProductQueryDto) {
     try {
@@ -135,6 +146,7 @@ export class ProductsController {
   /**
    * Obtener productos nuevos
    */
+  @Public()
   @Get('new')
   async findNew(
     @Query('days', new DefaultValuePipe(30), ParseIntPipe) days: number,
@@ -197,6 +209,7 @@ export class ProductsController {
   /**
    * Obtener productos por rango de precios
    */
+  @Public()
   @Get('price-range')
   async findByPriceRange(
     @Query('minPrice', ParseIntPipe) minPrice: number,
@@ -214,6 +227,7 @@ export class ProductsController {
   /**
    * Obtener productos por etiquetas
    */
+  @Public()
   @Get('tags')
   async findByTags(
     @Query('tags') tags: string[],
@@ -231,6 +245,7 @@ export class ProductsController {
   /**
    * Obtener productos por marca
    */
+  @Public()
   @Get('brand/:brand')
   async findByBrand(
     @Param('brand') brand: string,
@@ -247,6 +262,7 @@ export class ProductsController {
   /**
    * Obtener estadísticas de productos
    */
+  @Public()
   @Get('stats')
   async getStats() {
     try {
@@ -260,6 +276,7 @@ export class ProductsController {
   /**
    * Obtener productos por categoría (estadísticas)
    */
+  @Public()
   @Get('stats/by-category')
   async getProductsByCategory() {
     try {
@@ -273,6 +290,7 @@ export class ProductsController {
   /**
    * Obtener productos más vendidos
    */
+  @Public()
   @Get('stats/top-selling')
   async getTopSellingProducts(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
@@ -288,6 +306,7 @@ export class ProductsController {
   /**
    * Obtener productos más vistos
    */
+  @Public()
   @Get('stats/most-viewed')
   async getMostViewedProducts(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
@@ -363,6 +382,7 @@ export class ProductsController {
   /**
    * Obtener producto por ID
    */
+  @Public()
   @Get(':id')
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
@@ -411,6 +431,7 @@ export class ProductsController {
   /**
    * Actualizar producto
    */
+  @Auth(Role.ADMIN)
   @Patch(':id')
   async update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -427,6 +448,7 @@ export class ProductsController {
   /**
    * Eliminar producto (soft delete)
    */
+  @Auth(Role.ADMIN)
   @Delete(':id')
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     try {
@@ -440,6 +462,7 @@ export class ProductsController {
   /**
    * Restaurar producto eliminado
    */
+  @Auth(Role.ADMIN)
   @Patch(':id/restore')
   async restore(@Param('id', ParseUUIDPipe) id: string) {
     try {
@@ -453,6 +476,7 @@ export class ProductsController {
   /**
    * Eliminar producto permanentemente
    */
+  @Auth(Role.ADMIN)
   @Delete(':id/hard')
   async hardDelete(@Param('id', ParseUUIDPipe) id: string) {
     try {
@@ -466,6 +490,7 @@ export class ProductsController {
   /**
    * Actualizar stock del producto
    */
+  @Auth(Role.ADMIN)
   @Patch(':id/stock')
   async updateStock(
     @Param('id', ParseUUIDPipe) id: string,
@@ -482,6 +507,7 @@ export class ProductsController {
   /**
    * Incrementar stock del producto
    */
+  @Auth(Role.ADMIN)
   @Patch(':id/stock/increment')
   async incrementStock(
     @Param('id', ParseUUIDPipe) id: string,
@@ -498,6 +524,7 @@ export class ProductsController {
   /**
    * Decrementar stock del producto
    */
+  @Auth(Role.ADMIN)
   @Patch(':id/stock/decrement')
   async decrementStock(
     @Param('id', ParseUUIDPipe) id: string,
@@ -514,6 +541,7 @@ export class ProductsController {
   /**
    * Verificar estado del stock
    */
+  @Public()
   @Get(':id/stock/check')
   async checkStock(@Param('id', ParseUUIDPipe) id: string) {
     try {
@@ -527,6 +555,7 @@ export class ProductsController {
   /**
    * Actualización masiva de stock
    */
+  @Auth(Role.ADMIN)
   @Patch('stock/bulk-update')
   async bulkUpdateStock(
     @Body('updates') updates: Array<{ productId: string; quantity: number }>,
@@ -542,6 +571,7 @@ export class ProductsController {
   /**
    * Activar producto
    */
+  @Auth(Role.ADMIN)
   @Patch(':id/activate')
   async activate(@Param('id', ParseUUIDPipe) id: string) {
     try {
@@ -555,6 +585,7 @@ export class ProductsController {
   /**
    * Desactivar producto
    */
+  @Auth(Role.ADMIN)
   @Patch(':id/deactivate')
   async deactivate(@Param('id', ParseUUIDPipe) id: string) {
     try {
@@ -568,6 +599,7 @@ export class ProductsController {
   /**
    * Alternar estado activo del producto
    */
+  @Auth(Role.ADMIN)
   @Patch(':id/toggle-status')
   async toggleStatus(@Param('id', ParseUUIDPipe) id: string) {
     try {
@@ -581,6 +613,7 @@ export class ProductsController {
   /**
    * Establecer producto como destacado
    */
+  @Auth(Role.ADMIN)
   @Patch(':id/featured')
   async setFeatured(
     @Param('id', ParseUUIDPipe) id: string,
@@ -598,6 +631,7 @@ export class ProductsController {
   /**
    * Actualización masiva de estado
    */
+  @Auth(Role.ADMIN)
   @Patch('status/bulk-update')
   async bulkUpdateStatus(
     @Body('ids') ids: string[],
@@ -614,6 +648,7 @@ export class ProductsController {
   /**
    * Verificar si el producto existe
    */
+  @Public()
   @Get('utils/exists/:id')
   async exists(@Param('id', ParseUUIDPipe) id: string) {
     try {
