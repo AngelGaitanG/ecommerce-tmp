@@ -1,8 +1,8 @@
 <!-- Header de navegación -->
-<app-header></app-header>
+<app-header *ngIf="showHeader"></app-header>
 
 <!-- Contenido principal -->
-<main class="main-content">
+<main class="main-content" [class.no-header]="!showHeader">
   <router-outlet></router-outlet>
 </main>
 

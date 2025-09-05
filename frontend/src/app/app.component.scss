@@ -1,6 +1,13 @@
 .main-content {
   min-height: calc(100vh - 72px); // Ajustar según la altura del header
   padding-top: 72px; // Espacio para el header fijo
+  transition: padding-top 0.3s ease;
+
+  // Cuando no hay header (rutas de autenticación)
+  &.no-header {
+    min-height: 100vh;
+    padding-top: 0;
+  }
 }
 
 // Estilos globales para la aplicación
