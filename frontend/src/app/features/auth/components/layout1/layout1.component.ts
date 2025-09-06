@@ -19,7 +19,6 @@ export class Layout1Component implements OnInit {
   errorMessage: string = '';
   returnUrl: string = '/';
   showPassword: boolean = false;
-  showConfirmPassword: boolean = false;
   isLoginMode: boolean = true; // true = login, false = register
   // LoadingService is now public for template access
 
@@ -37,11 +36,9 @@ export class Layout1Component implements OnInit {
 
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
   }
 
   ngOnInit(): void {
@@ -136,7 +133,6 @@ export class Layout1Component implements OnInit {
       
       const registerData = {
         firstName: this.registerForm.get('firstName')?.value,
-        lastName: this.registerForm.get('lastName')?.value,
         email: this.registerForm.get('email')?.value,
         password: this.registerForm.get('password')?.value
       };
@@ -154,10 +150,6 @@ export class Layout1Component implements OnInit {
     } else {
       this.markRegisterFormGroupTouched();
     }
-  }
-
-  toggleConfirmPasswordVisibility(): void {
-    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   toggleMode(): void {
@@ -187,21 +179,14 @@ export class Layout1Component implements OnInit {
       }
     }
     
-    // Check for password mismatch
-    if (fieldName === 'confirmPassword' && this.registerForm.errors?.['passwordMismatch']) {
-      return 'Las contraseñas no coinciden';
-    }
-    
     return '';
   }
 
   private getRegisterFieldDisplayName(fieldName: string): string {
     const displayNames: { [key: string]: string } = {
       'firstName': 'Nombre',
-      'lastName': 'Apellido',
       'email': 'Email',
-      'password': 'Contraseña',
-      'confirmPassword': 'Confirmar contraseña'
+      'password': 'Contraseña'
     };
     return displayNames[fieldName] || fieldName;
   }
@@ -213,13 +198,4 @@ export class Layout1Component implements OnInit {
     });
   }
 
-  private passwordMatchValidator(form: any) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
-    
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      return { passwordMismatch: true };
-    }
-    return null;
-  }
 }
