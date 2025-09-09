@@ -13,36 +13,19 @@
 
     <!-- Form -->
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
-      <!-- Name Fields -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="firstName" class="form-label">Nombre</label>
-          <input
-            type="text"
-            id="firstName"
-            formControlName="firstName"
-            class="form-input"
-            [class.error]="isFieldInvalid('firstName')"
-            placeholder="Tu nombre"
-          >
-          <div class="error-message" *ngIf="isFieldInvalid('firstName')">
-            {{ getFieldError('firstName') }}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="lastName" class="form-label">Apellido</label>
-          <input
-            type="text"
-            id="lastName"
-            formControlName="lastName"
-            class="form-input"
-            [class.error]="isFieldInvalid('lastName')"
-            placeholder="Tu apellido"
-          >
-          <div class="error-message" *ngIf="isFieldInvalid('lastName')">
-            {{ getFieldError('lastName') }}
-          </div>
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="firstName" class="form-label">Nombre</label>
+        <input
+          type="text"
+          id="firstName"
+          formControlName="firstName"
+          class="form-input"
+          [class.error]="isFieldInvalid('firstName')"
+          placeholder="Tu nombre"
+        >
+        <div class="error-message" *ngIf="isFieldInvalid('firstName')">
+          {{ getFieldError('firstName') }}
         </div>
       </div>
 
@@ -95,38 +78,7 @@
         </div>
       </div>
 
-      <!-- Confirm Password -->
-      <div class="form-group">
-        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
-        <div class="password-input-container">
-          <input
-            [type]="showConfirmPassword ? 'text' : 'password'"
-            id="confirmPassword"
-            formControlName="confirmPassword"
-            class="form-input password-input"
-            [class.error]="isFieldInvalid('confirmPassword')"
-            placeholder="Repite tu contraseña"
-          >
-          <button
-            type="button"
-            class="password-toggle"
-            (click)="toggleConfirmPasswordVisibility()"
-          >
-            <svg *ngIf="!showConfirmPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <svg *ngIf="showConfirmPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20C5 20 1 12 1 12A16.16 16.16 0 0 1 6.06 6.06L17.94 17.94Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4C19 4 23 12 23 12A16.16 16.16 0 0 1 19.94 17.94L9.9 4.24Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-        <div class="error-message" *ngIf="isFieldInvalid('confirmPassword')">
-          {{ getFieldError('confirmPassword') }}
-        </div>
-      </div>
+
 
       <!-- Terms and Conditions -->
       <div class="form-group checkbox-group">

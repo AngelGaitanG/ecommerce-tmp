@@ -14,7 +14,6 @@ export class RegisterComponent {
   registerForm: FormGroup;
   isLoading = false;
   showPassword = false;
-  showConfirmPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -22,32 +21,13 @@ export class RegisterComponent {
   ) {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]],
       acceptTerms: [false, [Validators.requiredTrue]]
-    }, { validators: this.passwordMatchValidator });
+    });
   }
 
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
-    
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
-    
-    if (confirmPassword?.hasError('passwordMismatch')) {
-      delete confirmPassword.errors!['passwordMismatch'];
-      if (Object.keys(confirmPassword.errors!).length === 0) {
-        confirmPassword.setErrors(null);
-      }
-    }
-    
-    return null;
-  }
+
 
   onSubmit(): void {
     if (this.registerForm.valid) {
@@ -77,10 +57,6 @@ export class RegisterComponent {
     this.showPassword = !this.showPassword;
   }
 
-  toggleConfirmPasswordVisibility(): void {
-    this.showConfirmPassword = !this.showConfirmPassword;
-  }
-
   getFieldError(fieldName: string): string {
     const field = this.registerForm.get(fieldName);
     
@@ -106,10 +82,8 @@ export class RegisterComponent {
   private getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
       firstName: 'Nombre',
-      lastName: 'Apellido',
       email: 'Email',
-      password: 'Contraseña',
-      confirmPassword: 'Confirmar contraseña'
+      password: 'Contraseña'
     };
     return labels[fieldName] || fieldName;
   }

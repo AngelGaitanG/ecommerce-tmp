@@ -175,6 +175,10 @@
 .form-content {
   width: 100%;
   max-width: 320px; // Same as original login
+  height: 541px; // Fixed height to match login form
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 // Back to Home Button
@@ -215,7 +219,7 @@
 
 .form-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .form-title {
@@ -233,7 +237,24 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
+  height: 100%;
+}
+
+// Ajustes específicos para ambos formularios
+form.auth-form {
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  .submit-btn {
+    margin-top: auto;
+    margin-bottom: 10px;
+  }
+  
+  .register-link {
+    margin-top: 5px;
+  }
 }
 
 .form-group {
