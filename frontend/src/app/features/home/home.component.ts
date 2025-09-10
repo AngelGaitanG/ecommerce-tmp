@@ -16,6 +16,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   totalSlides = 3;
   autoPlayInterval: any;
   
+  // Productos destacados para el carrusel
+  featuredCarouselProducts: Product[] = [];
+  
   categories = [
     {
       name: 'Vestidos',
@@ -41,6 +44,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   
   ngOnInit() {
     this.startAutoPlay();
+    // Inicializar productos destacados para el carrusel
+    this.featuredCarouselProducts = this.featuredProducts.slice(0, 8);
   }
   
   ngOnDestroy() {

@@ -3,9 +3,9 @@
   <section class="hero-carousel">
     <div class="carousel-container">
       <div class="carousel-slides">
-        <!-- Slide 1 -->
+        <!-- Slide 1: Promoción con imagen -->
         <div class="carousel-slide active">
-          <div class="slide-content">
+          <div class="slide-content promotion-slide">
             <div class="slide-text">
               <h1 class="slide-title">Nueva Colección Primavera</h1>
               <p class="slide-subtitle">
@@ -24,45 +24,42 @@
           </div>
         </div>
         
-        <!-- Slide 2 -->
+        <!-- Slide 2: Productos destacados -->
         <div class="carousel-slide">
-          <div class="slide-content">
-            <div class="slide-text">
-              <h1 class="slide-title">Ofertas Especiales</h1>
-              <p class="slide-subtitle">
-                Hasta 50% de descuento en productos seleccionados.
-                Aprovecha estas ofertas por tiempo limitado.
-              </p>
-              <div class="slide-actions">
-                <a href="#products" class="btn btn-primary btn-large">Ver Ofertas</a>
-                <span class="slide-price">50% OFF</span>
+          <div class="slide-content featured-products-slide">
+            <h2 class="featured-title">Productos Destacados</h2>
+            <div class="featured-grid">
+              <div class="featured-item" *ngFor="let product of featuredCarouselProducts.slice(0, 4)">
+                <div class="featured-image">
+                  <img [src]="product.image" [alt]="product.name">
+                </div>
+                <div class="featured-info">
+                  <h3 class="featured-name">{{product.name}}</h3>
+                  <div class="featured-price">
+                    <span class="current-price">${{product.price}}</span>
+                    <span class="original-price" *ngIf="product.originalPrice">${{product.originalPrice}}</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="slide-image">
-              <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=600&fit=crop" 
-                   alt="Ofertas Especiales">
-            </div>
+            <a href="#products" class="btn btn-outline">Ver todos los productos</a>
           </div>
         </div>
         
-        <!-- Slide 3 -->
+        <!-- Slide 3: Categorías -->
         <div class="carousel-slide">
-          <div class="slide-content">
-            <div class="slide-text">
-              <h1 class="slide-title">Accesorios Premium</h1>
-              <p class="slide-subtitle">
-                Complementa tu estilo con nuestra línea de accesorios exclusivos.
-                Calidad y elegancia en cada detalle.
-              </p>
-              <div class="slide-actions">
-                <a href="#categories" class="btn btn-primary btn-large">Ver Accesorios</a>
-                <span class="slide-price">Nuevo</span>
+          <div class="slide-content categories-slide">
+            <h2 class="categories-title">Explora Nuestras Categorías</h2>
+            <div class="categories-carousel-grid">
+              <div class="category-carousel-item" *ngFor="let category of categories.slice(0, 4)">
+                <div class="category-carousel-image">
+                  <img [src]="category.image" [alt]="category.name">
+                </div>
+                <h3 class="category-carousel-name">{{category.name}}</h3>
+                <span class="category-carousel-count">{{category.count}} productos</span>
               </div>
             </div>
-            <div class="slide-image">
-              <img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=600&h=600&fit=crop" 
-                   alt="Accesorios Premium">
-            </div>
+            <a href="#categories" class="btn btn-outline">Ver todas las categorías</a>
           </div>
         </div>
       </div>
